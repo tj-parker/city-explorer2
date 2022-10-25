@@ -1,7 +1,7 @@
 # City Explorer
 
 **Author**: TJ Parker
-**Version**: 1.0.0
+**Version**: 1.0.1
 
 ## Overview
 
@@ -16,7 +16,7 @@ Refer to <https://trello.com/b/Ajj9Cbac/module-2-city-explorer> for a detailed, 
 
 ## Change Log
 
-10-24-2022 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource. -->
+10-24-2022 11:59pm - Application now has a fully-functional express server, with a GET route for the location resource.
 
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
