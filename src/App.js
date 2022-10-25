@@ -27,7 +27,7 @@ class App extends React.Component {
     e.preventDefault();
 
     try {
-      let url = `https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city}&format=json`
+      let url = `https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city.toLowerCase()}&format=json`;
 
       let cityData = await axios.get(url);
 
