@@ -4,6 +4,7 @@ import './App.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Weather from './Weather';
 
 class App extends React.Component {
   constructor(props) {
@@ -12,7 +13,8 @@ class App extends React.Component {
       city: '',
       cityData: [],
       error: false,
-      errorMessage: ''
+      errorMessage: '',
+      weatherData: []
     }
   }
 
@@ -27,14 +29,17 @@ class App extends React.Component {
     e.preventDefault();
 
     try {
-      let url = `https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city.toLowerCase()}&format=json`;
+      let url = `https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city}&format=json`;
 
       let cityData = await axios.get(url);
+
+      this.getWeatherData(cityData);
 
       this.setState({
         cityData: cityData.data[0],
         error: false
       });
+
     } catch (error) {
       console.log(error);
       this.setState({
@@ -43,7 +48,25 @@ class App extends React.Component {
       })
     }
 
+  }
 
+  getWeatherData = async (location) => {
+    try {
+
+      let url = `${process.env.REACT_APP_SERVER}/weather?searchQuery=${this.state.city}&lat=${location.lat}&lon=${location.lon}`;
+
+      let weatherData = await axios.get(url);
+
+      this.setState({
+        weatherData: weatherData.data
+      })
+
+    } catch (error) {
+      this.setState({
+        error: true,
+        errorMessage: error.messsage
+      });
+    }
   }
 
   render() {
@@ -53,8 +76,8 @@ class App extends React.Component {
 
         <Form onSubmit={this.getCityData}>
           <Form.Label> Pick a City</Form.Label>
-            <Form.Control type="text" onInput={this.handleInput} />
-            <Button type='submit'>Explore!</Button>
+          <Form.Control type="text" onInput={this.handleInput} />
+          <Button type='submit'>Explore!</Button>
         </Form>
 
         {
@@ -62,12 +85,17 @@ class App extends React.Component {
             ?
             <p>{this.state.errorMessage}</p>
             :
+            <>
             <Card>
               <Card.Img src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${this.state.cityData.lat},${this.state.cityData.lon}&zoom=12`} />
               <Card.Title>{this.state.cityData.display_name}</Card.Title>
               <Card.Text>Latitude: {this.state.cityData.lat}</Card.Text>
               <Card.Text>Longitude: {this.state.cityData.lon}</Card.Text>
             </Card>
+            <Weather 
+              weatherData={this.state.weatherData}
+            />
+            </>
         }
       </>
     );
